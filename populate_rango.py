@@ -65,6 +65,15 @@ def add_page(cat, title, url, views=0):
 
 def add_cat(title):
     cat = Category.objects.get_or_create(name=title)[0]
+    if title=="Python":
+        cat.views = 128
+        cat.likes = 64
+    elif title=="Django":
+        cat.views = 64
+        cat.likes = 32
+    else:
+        cat.views = 32
+        cat.likes = 16  
     cat.save()
     return cat
 
