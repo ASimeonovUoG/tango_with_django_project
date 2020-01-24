@@ -27,4 +27,4 @@ def about(request):
 </html>
     """
     # This method can be passed whole HTML files
-    return HttpResponse(returnString)
+    return render(request,template_name="rango/about.html", context= {"yourName": "Alexander Simeonov"})

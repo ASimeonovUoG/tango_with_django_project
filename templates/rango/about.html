@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+{%load staticfiles%}
+<html>
+<body>
+
+<h1>Rango says...</h1>
+<p>here is the about page.</p>
+<p><a href="https://en.wikipedia.org/wiki/Wikipedia:About">Well, no idea</a></p>
+<a href="/rango/">Index</a>
+<p> This tutorial has been put together by {{yourName}}. </p>
+<img src="{% static 'images/rango.jpg' %}" alt="Picture of Rango" /> <!-- New line -->
+<img src="{{MEDIA_URL}}cat.jpg" alt="Picture of a Cat" /> <!-- New line -->
+
+</body>
+</html>
