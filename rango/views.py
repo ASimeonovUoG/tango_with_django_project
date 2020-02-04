@@ -17,7 +17,7 @@ def index(request):
     # Initialise context_dictionary
     context_dict = {}
     # Query model for Categories
-    category_list = Category.objects.order_by("-likes")[:5]
+    category_list = Category.objects.order_by("-likes")[:10]
     context_dict["categories"] = category_list
     # print(category_list)
     # Construct a dictionary to pass to the template engine as its context.
@@ -106,7 +106,7 @@ def add_page(request, category_name_slug):
     if request.method == "POST":
         # retrieve form
         form = PageForm(request.POST)
-        if form.is_valid:
+        if form.is_valid():
             page = form.save(commit=False)
             page.category = category
             page.views = 0
