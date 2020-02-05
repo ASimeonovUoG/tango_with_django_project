@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.urls import reverse
+from django.contrib.auth import authenticate, login
 
 # Import Category model
 from rango.models import Category
@@ -162,3 +163,30 @@ def register(request):
     context_dictionary = {"user_form" : user_form, "profile_form" : profile_form , "registered" : registered}
     # Render the template depending on the context.
     return render(request,'rango/register.html', context_dictionary)
+
+def user_login(request):
+
+    if request.method == "POST":
+
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        # Use Django machinery to authenticate user, if success a user is provided
+        user = authenticate(username=username, password=password)
+
+        if user:
+            # Is the account active ? Could be disabled
+            if user.is_active:
+                # If valid and active we can log them in, send to homepage
+                login(request, user)
+                return redirect(reverse('rango:index'))
+            else:
+                # User account is correct but not active
+                return HttpResponse("Your account is disabled.")
+        else:
+            # Bad login details provided
+            print(f"Invalid login details: {username}, {password}")
+            return HttpResponse("Invalid login details supplied.")
+    else:
+        # If request is not POST then render login template
+        return render(request, 'rango/login.html')
