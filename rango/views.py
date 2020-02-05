@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.urls import reverse
 
 # Import Category model
 from rango.models import Category
@@ -8,10 +9,8 @@ from rango.models import Category
 from rango.models import Page
 
 # Import Forms
-from rango.forms import CategoryForm, PageForm
+from rango.forms import CategoryForm, PageForm, UserForm, UserProfileForm
 from django.shortcuts import redirect
-
-from django.urls import reverse
 
 def index(request):
     # Initialise context_dictionary
@@ -120,3 +119,46 @@ def add_page(request, category_name_slug):
     # Render the form with error messages (if any).
     context_dict = {"form":form,"category":category}
     return render(request, "rango/add_page.html", context_dict)
+
+def register(request):
+    # A boolean value saying if registration is successful
+    registered = False
+
+    # If a request is POST we need to handle form processing 
+    if request.method == "POST":
+        # Attempt to grab information from the raw form user form
+        user_form = UserForm(request.POST)
+        profile_form = UserProfileForm(request.POST)
+
+        # if the two forms are valid
+        if user_form.is_valid() and profile_form.is_valid():
+            # save the user's form data into the database
+            user = user_form.save()
+
+            # Hash the password with the set_password method and update object
+            user.set_password(user.password)
+            user.save()
+
+            # Sort out UserProfile instance 
+            profile = profile_form.save(commit=False)
+            profile.user = user
+
+            # If user provided a profile pic, retrieve it and put it in UserForm and update it
+            if "picture" in request.FILES:
+                profile.picture = request.FILES['picture']
+            profile.save()
+
+            # Update success flag to indicate registration is complete
+            registered = True
+        else:
+            # Invalid form or forms - mistakes ?
+            print(user_form.errors, profile_form.errors)
+
+    else:
+        # Request is of type GET - render form using both models
+        user_form = UserForm()
+        profile_form = UserProfileForm()
+    
+    context_dictionary = {"user_form" : user_form, "profile_form" : profile_form , "registered" : registered}
+    # Render the template depending on the context.
+    return render(request,'rango/register.html', context_dictionary)
