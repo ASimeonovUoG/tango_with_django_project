@@ -30,6 +30,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+# Path where unsuccessful login attempts are redirectyed
+LOGIN_URL = 'rango:login'
 
 # Application definition
 
