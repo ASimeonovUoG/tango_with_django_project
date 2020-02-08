@@ -33,8 +33,10 @@ ALLOWED_HOSTS = []
 # Path where unsuccessful login attempts are redirectyed
 LOGIN_URL = 'rango:login'
 
-# Application definition
+# Allowing browser-length sessions
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
+# Application definition
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
